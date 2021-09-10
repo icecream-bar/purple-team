@@ -2,7 +2,7 @@ import json
 import requests
 from shodan import Shodan
 
-api = Shodan('TOKENAPI')
+api = Shodan('mTNrVaJdNSdF86u7YSLacH0diQtGaMBs')
 
 response = api.search(query='IIS')
 
@@ -19,10 +19,19 @@ with open('store.json', 'w') as file:
 #    j.close()
 
 #Read json file and apply fomat
-with open('store.json') as file:
-    json_data = json.load(file)
-r = json.dumps(json_data, indent=2)
-print(r)
+#with open('store.json') as file:
+#    json_data = json.load(file)
+#r = json.dumps(json_data, indent=2)
+#print(r)
 
-#for i in r:
-#    print (i[""])
+with open('store.json') as json_file:
+    data = json.load(json_file)
+#print(type(data))
+#print(str(data))
+json_object = json.dumps(data, indent = 4) 
+#print(json_object)
+for criteria in data['ip_str']:
+    for key, value in criteria.iteritems():
+        print (key, 'is:', value)
+    print ('')
+
