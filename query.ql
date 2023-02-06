@@ -1,26 +1,18 @@
 import javascript
-import path
 
-class APIRoute {
-  private String endpoint;
-  private String file;
-
-  APIRoute(String endpoint, String file) {
-    this.endpoint = endpoint;
-    this.file = file;
-  }
-
-  String getEndpoint() {
-    return endpoint;
-  }
-
-  String getFile() {
-    return file;
+class RouteCall extends Call {
+  RouteCall() {
+    super(this.getMethod().getName() == "get" and
+          this.getMethod().getDeclaringType().getName().endsWith("Router"));
   }
 }
 
-from RouterGetCall route, File file
-where route.getEndpoint().startsWith("/api") and
-      file.getName().endsWith(".js") and
-      path.contains("api", file.getPath().getBaseName().toString())
-select new APIRoute(route.getEndpoint(), file.getPath().toString())
+class Route extends RouteCall {
+  Route() {
+    super(this.getMethod().getFirstArgument().asStringLiteral().getValue().startsWith("/api/"));
+  }
+}
+
+query routeCalls {
+  Route.all().map(rc => rc.getMethod().getFirstArgument().asStringLiteral().getValue())
+}
